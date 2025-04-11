@@ -219,7 +219,7 @@
     <div class="container">
         <!-- Order Placement Form -->
         <div class="form-container">
-            <form id="orderForm" action="/api/submit" method="POST">
+            <form id="orderForm">
                 <!-- Title, First Name, Last Name -->
                 <label for="title">Title</label>
                 <select id="title" name="title" required>
@@ -318,7 +318,7 @@
         }
 
         // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', function (e) {
+        document.getElementById('orderForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             // Get form values
@@ -350,22 +350,23 @@
 
             // Submit the form data to the backend API
             const formData = new FormData(e.target);
-            fetch('/api/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.fromEntries(formData.entries())),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('Form submitted successfully!');
-                    } else {
-                        console.error('Error submitting form:', data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+            try {
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(formData.entries())),
                 });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Form submitted successfully!');
+                } else {
+                    alert('Error submitting form.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the form.');
+            }
         });
     </script>
 </body>
