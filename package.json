@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A form submission app that sends data to Telegram",
   "main": "index.js",
-  "type": "module",  // Add this line
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
